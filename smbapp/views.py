@@ -190,3 +190,5 @@ class CreatePost (CreateView):
         kwargs = super(CreatePost, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+#### CRUD Instrument
