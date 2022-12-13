@@ -30,6 +30,7 @@
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'smbapp-register' %}">Sing-Up</a></li>
                         <!-- <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="">Contact</a></li> -->
                     {% if request.user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'smbapp-profile' %}">My Profile</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'smbapp-logout' %}">Logout</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'smbapp-login' %}">Login</a></li>

@@ -26,15 +26,18 @@ from smbapp.forms import *
 
 # Create your views here.
 def smbapp_home (request):
+    return render (request, 'smbapp/index.html')
+
+# Create your views here.
+def smbapp_profile (request):
     user = request.user
     print (user)
     if request.user.is_authenticated:
         my_bands = Band.objects.filter(creator=request.user)
         contex = {'my_bands': my_bands}
-        return render (request, 'smbapp/index.html', contex)
+        return render (request, 'smbapp/my_profile.html', contex)
     else:
-        return render (request, 'smbapp/index.html')
-
+        return render (request, 'smbapp/my_profile.html')
 
 #view to creat user
 def register (request):

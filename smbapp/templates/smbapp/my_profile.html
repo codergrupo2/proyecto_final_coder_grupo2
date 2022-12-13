@@ -1,0 +1,28 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+                       
+{% if request.user.is_authenticated %}
+    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
+    <br>
+    <p> My Bands</p>
+    <ul>
+        {% for band in my_bands %}
+            <li> {{band.name}} ::: <a  href="">Delete</a> :: <a href="">Edit</a> </li>
+        {% endfor %}
+        </ul>
+    <br>
+    <center>
+    <a class="btn btn-primary" href="{% url 'create-instrument' %}">Create Instrument</a>
+    <a class="btn btn-primary" href="{% url 'create-band' %}">Create Band</a>
+    <a class="btn btn-primary" href="{% url 'add-my-instruments' %}">Add My Instruments</a>
+    <a class="btn btn-primary" href="{% url 'create-post' %}">Create Post</a>
+   </center>
+{% else %}
+    <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
+{% endif %}
+
+
+{% endblock %}
