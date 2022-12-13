@@ -1,0 +1,15 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+<center>
+{% if request.user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'create-instrument' %}">Create Instrument</a>
+    <a class="btn btn-primary" href="{% url 'create-band' %}">Create Band</a>
+    <a class="btn btn-primary" href="{% url 'create-musician' %}">Create Musician</a>
+{% endif %}
+</center>
+
+{% endblock %}

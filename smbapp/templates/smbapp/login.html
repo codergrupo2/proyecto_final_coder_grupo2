@@ -1,0 +1,18 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+{% if errors %}
+    <p style="color: red">Error: {{errors}}</p>
+{% endif %}
+
+<center>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Login"> 
+</form>
+</center>
+
+{% endblock %}
