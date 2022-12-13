@@ -4,11 +4,23 @@
 
 {% block contenido %}
                        
-{% if request.user.is_authenticated %}
-    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
-{% else %}
-    <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
-{% endif %}
+    {% if request.user.is_authenticated %}
+        <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
+    {% else %}
+        <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
+    {% endif %}
 
+    <center>
+    {% for post in posts %}
+        <h3>Post # {{post.id}}</h3>
+                    <div class="card my-4">
+                            <div class="card-body">
+                            <h5 class="card-title">Banda : {{ post.band }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Tour Date : {{ post.tour_dates }}</h6>
+                            <h7 class="card-text">Description: {{ post.text }}</h7> 
+                        </div>
+                    </div>
+    {% endfor %}
+    </center>
 
 {% endblock %}

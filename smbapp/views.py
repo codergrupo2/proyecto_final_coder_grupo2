@@ -26,7 +26,10 @@ from smbapp.forms import *
 
 # Create your views here.
 def smbapp_home (request):
-    return render (request, 'smbapp/index.html')
+
+    posts = Post.objects.all()
+
+    return render (request, 'smbapp/index.html', {'posts': posts})
 
 # Create your views here.
 def smbapp_profile (request):
