@@ -104,6 +104,18 @@ def add_my_instruments (request):
 
     return render(request, "smbapp/add_my_instruments.html", {"form": formulario})
 
+
+########### CRUD Bands ###############
+## home crud bands
+def crud_bands (request):
+    return render(request, "smbapp/crud_my_bands.html")
+    
+### list all my bands 
+def list_band (request):
+    my_bands =  Band.objects.filter(creator=request.user)
+    
+    return render (request, 'smbapp/list_band.html', {'my_bands': my_bands})
+
 # Crear Banda
 def create_band (request):
     
@@ -131,6 +143,14 @@ def create_band (request):
 
     return render(request, "smbapp/band_form.html", {"form": formulario})
 
+### edit band
+def edit_band (request):
+    pass 
+### delete bands 
+def delete_band (request):
+    pass 
+
+############END CRUD BANDS ######################
 
 #### Views As a CLASS
 class CreateInstrument(CreateView):

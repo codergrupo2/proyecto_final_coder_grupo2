@@ -1,0 +1,19 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+                       
+{% if request.user.is_authenticated %}
+    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
+
+    <center>
+    <a class="btn btn-primary" href="{% url 'list-band' %}">List Band</a>
+    <a class="btn btn-primary" href="{% url 'create-band' %}">Create Band</a>
+    <a class="btn btn-primary" href="{% url 'edit-band' %}">Edit Band</a>
+    <a class="btn btn-primary" href="{% url 'delete-band' %}">Delete Band</a>
+   </center>
+{% endif %}
+
+
+{% endblock %}
