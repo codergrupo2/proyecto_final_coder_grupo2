@@ -26,12 +26,14 @@ from smbapp.forms import *
 
 # Create your views here.
 def smbapp_home (request):
-     
-    my_bands = Band.objects.filter(creator=request.user)
-    
-    contex = {'my_bands': my_bands}
-
-    return render (request, 'smbapp/index.html', contex)
+    user = request.user
+    print (user)
+    if request.user.is_authenticated:
+        my_bands = Band.objects.filter(creator=request.user)
+        contex = {'my_bands': my_bands}
+        return render (request, 'smbapp/index.html', contex)
+    else:
+        return render (request, 'smbapp/index.html')
 
 
 #view to creat user
@@ -137,3 +139,8 @@ class CreatePost (CreateView):
     form_class = FormCreatePost
     template_name = "smbapp/post_form.html"
     success_url = '/smbapp/home/'
+
+    def get_form_kwargs(self):
+        kwargs = super(CreatePost, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs

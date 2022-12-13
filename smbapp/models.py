@@ -28,7 +28,7 @@ class Band (models.Model):
     members = models.ManyToManyField(User, related_name='members')
     creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='creator')
     def __str__(self) :
-        return f"{self.title} + {self.creator}"
+        return f"{self.name} + {self.creator}"
 
 #modelo de post
 class Post (models.Model):

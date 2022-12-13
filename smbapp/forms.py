@@ -40,10 +40,15 @@ class FormAddMyInstruments(forms.Form):
 
 #Form create post
 class FormCreatePost(forms.ModelForm):
-    band = forms.ChoiceField()
+    band = forms.ModelChoiceField(queryset=Band.objects.all().order_by('name'))
     tour_dates = forms.DateField
     text = forms.CharField()
     
     class Meta:
         model = Post
         fields =['band', 'tour_dates', 'text']
+    
+    def __init__(self, *args, **kwargs):
+       user = kwargs.pop('user')
+       super(FormCreatePost, self).__init__(*args, **kwargs)
+       self.fields['band'].queryset = Band.objects.filter(creator=user)
