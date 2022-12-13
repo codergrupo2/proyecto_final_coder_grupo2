@@ -24,22 +24,26 @@ class FormCreateUser (UserCreationForm):
         help_texts = {k:'' for k in fields}
 
 #Form to create band
-class FormCreateBand(forms.ModelForm):
+class FormCreateBand(forms.Form):
     name = forms.CharField(max_length=50,required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    tour_dates = forms.DateField()
-    image = forms.ImageField()
-    artist_info = forms.CharField()
-    
+    description = forms.CharField(max_length=150,required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
+    members = forms.ModelMultipleChoiceField(queryset=User.objects.all().order_by('email'),widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Band
-        fields = ['name', 'tour_dates', 'image', 'artist_info']
-#Form create musician
-class FormCreateMusician(forms.ModelForm):
-    name = forms.CharField(max_length=50,required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-    tour_dates = forms.DateField()
-    image = forms.ImageField()
-    artist_info = forms.CharField()
+        fields = ['name', 'description', 'members']
+
+#Form create musician - add my instruments
+class FormAddMyInstruments(forms.Form):
+    instrument = forms.ModelMultipleChoiceField(queryset=Instrument.objects.all().order_by('name'),widget=forms.CheckboxSelectMultiple)
+
+
+#Form create post
+class FormCreatePost(forms.ModelForm):
+    band = forms.ChoiceField()
+    tour_dates = forms.DateField
+    text = forms.CharField()
     
     class Meta:
-        model = Musician
-        fields =['name', 'tour_dates', 'image', 'artist_info']
+        model = Post
+        fields =['band', 'tour_dates', 'text']

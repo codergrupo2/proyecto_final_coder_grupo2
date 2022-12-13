@@ -1,6 +1,6 @@
 
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 #Import Auth Class
 from django.contrib.auth.forms import AuthenticationForm
@@ -26,7 +26,12 @@ from smbapp.forms import *
 
 # Create your views here.
 def smbapp_home (request):
-    return render (request, 'smbapp/index.html')
+     
+    my_bands = Band.objects.filter(creator=request.user)
+    
+    contex = {'my_bands': my_bands}
+
+    return render (request, 'smbapp/index.html', contex)
 
 
 #view to creat user
@@ -67,23 +72,68 @@ def login (request):
     form = AuthenticationForm()
     return render (request, 'smbapp/login.html', {"form": form, "errors": errors})
 
+# agrego mis instrumentos
+def add_my_instruments (request):
+    
+    if request.method == "POST":
+        formulario = FormAddMyInstruments(request.POST)
+
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            user_id = request.user
+            my_instruments = MyInstruments(user_id = user_id)
+            my_instruments.save()
+
+            list_instruments = data['instrument']
+            for instrument in list_instruments:
+                my_instruments.instruments.add(instrument)           
+            my_instruments.save()
+
+            return redirect("smbapp-home")
+        else:
+            return render(request, "smbapp/add_my_instruments.html", {"form": formulario, "errors": formulario.errors })
+    formulario = FormAddMyInstruments()
+
+    return render(request, "smbapp/add_my_instruments.html", {"form": formulario})
+
+# Crear Banda
+def create_band (request):
+    
+    if request.method == "POST":
+        formulario = FormCreateBand(request.POST)
+
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            name = data['name']
+            description = data['description']
+            creator = request.user
+             
+            band = Band(name = name, description = description, creator=creator)
+            band.save()
+
+            list_members= data['members']
+            for member in list_members:
+                band.members.add(member)           
+            band.save()
+
+            return redirect("smbapp-home")
+        else:
+            return render(request, "smbapp/band_form.html", {"form": formulario, "errors": formulario.errors })
+    formulario = FormCreateBand()
+
+    return render(request, "smbapp/band_form.html", {"form": formulario})
+
 
 #### Views As a CLASS
 class CreateInstrument(CreateView):
      model = Instrument
      form_class = FormCreatInstrument
      template_name = "smbapp/instrument_form.html"
-     success_url = ''
+     success_url = '/smbapp/home/'
 
-class CreateBand(CreateView):
-    model = Band
-    form_class = FormCreateBand
-    template_name= "smbapp/band_form.html"
-    success_url = ''
-    
-class CreateMusician(CreateView):
-    model = Musician
-    form_class = FormCreateMusician
-    template_name = "smbapp/musician_form.html"
-    success_url = ''
-    
+
+class CreatePost (CreateView):
+    model = Post
+    form_class = FormCreatePost
+    template_name = "smbapp/post_form.html"
+    success_url = '/smbapp/home/'
