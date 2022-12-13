@@ -1,0 +1,21 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+                       
+{% if request.user.is_authenticated %}
+    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
+    <br>
+    <center>
+    <a class="btn btn-primary" href="{% url 'create-instrument' %}">Create Instrument</a>
+    <a class="btn btn-primary" href="{% url 'crud-bands' %}">Band Actions</a>
+    <a class="btn btn-primary" href="{% url 'add-my-instruments' %}">Add My Instruments</a>
+    <a class="btn btn-primary" href="{% url 'create-post' %}">Create Post</a>
+   </center>
+{% else %}
+    <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
+{% endif %}
+
+
+{% endblock %}
