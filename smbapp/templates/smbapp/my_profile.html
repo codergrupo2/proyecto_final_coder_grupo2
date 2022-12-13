@@ -7,13 +7,6 @@
 {% if request.user.is_authenticated %}
     <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
     <br>
-    <p> My Bands</p>
-    <ul>
-        {% for band in my_bands %}
-            <li> {{band.name}} ::: <a  href="">Delete</a> :: <a href="">Edit</a> </li>
-        {% endfor %}
-        </ul>
-    <br>
     <center>
     <a class="btn btn-primary" href="{% url 'create-instrument' %}">Create Instrument</a>
     <a class="btn btn-primary" href="{% url 'crud-bands' %}">Band Actions</a>

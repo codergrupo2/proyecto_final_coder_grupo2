@@ -6,14 +6,30 @@
                        
 {% if request.user.is_authenticated %}
     <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
-
     <center>
-    <a class="btn btn-primary" href="{% url 'list-band' %}">List Band</a>
+        {% for band in my_bands %}
+            <h3>Band ID# {{band.id}}</h3>
+                        <div class="card my-4">
+                                <div class="card-body">
+                                <h5 class="card-title">Banda : {{ band.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Description : {{ band.description }}</h6>
+                                <h7>Members:</h7>
+                                {% for member in band.members.all %}
+                                    <li>
+                                        {{member}}
+                                    </li>
+                                {% endfor %}
+                            </div>
+                            <a class="btn btn-primary" href="{% url 'edit-band' band.id %}">Edit Band</a>
+                        </div>
+        {% endfor %}
+        </center>
+    <center>
     <a class="btn btn-primary" href="{% url 'create-band' %}">Create Band</a>
-    <a class="btn btn-primary" href="{% url 'edit-band' %}">Edit Band</a>
-    <a class="btn btn-primary" href="{% url 'delete-band' %}">Delete Band</a>
    </center>
 {% endif %}
 
 
 {% endblock %}
+
+

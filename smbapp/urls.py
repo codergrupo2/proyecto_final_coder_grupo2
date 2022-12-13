@@ -13,9 +13,8 @@ urlpatterns = [
    #CRUD BAND
    ## Search
    path ( 'band/crud-bands/', crud_bands, name='crud-bands'),
-   path ( 'band/list/', list_band, name='list-band'),
    path ( 'band/create/', create_band, name='create-band'),
-   path ( 'band/edit/', edit_band, name='edit-band'),
+   path ( 'band/edit/<id>/', edit_band, name='edit-band'),
    path ( 'band/delete/', delete_band, name='delete-band'),
    #####
 

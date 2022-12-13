@@ -108,13 +108,8 @@ def add_my_instruments (request):
 ########### CRUD Bands ###############
 ## home crud bands
 def crud_bands (request):
-    return render(request, "smbapp/crud_my_bands.html")
-    
-### list all my bands 
-def list_band (request):
     my_bands =  Band.objects.filter(creator=request.user)
-    
-    return render (request, 'smbapp/list_band.html', {'my_bands': my_bands})
+    return render(request, "smbapp/crud_my_bands.html", {'my_bands': my_bands})
 
 # Crear Banda
 def create_band (request):
@@ -144,8 +139,33 @@ def create_band (request):
     return render(request, "smbapp/band_form.html", {"form": formulario})
 
 ### edit band
-def edit_band (request):
-    pass 
+def edit_band (request, id):
+    band = Band.objects.get(id=id)
+    
+    if request.method == "POST":
+
+        formulario = FormCreateBand (request.POST)
+       
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            band.name = data["name"]
+            band.description = data['description']
+            band.members.clear()
+            band.save()
+
+            list_members = data['members']
+            for member in list_members:
+                band.members.add(member)    
+                print (band.members)       
+            band.save()
+            return redirect("crud-bands")
+        
+        else:
+            return render(request, "smbapp/edit_my_band.html", {"form": formulario, "errors": formulario.errors })
+    
+    formulario = FormCreateBand(initial={ "name" : band.name, "description": band.description })
+    return render(request, "smbapp/edit_my_band.html", {"form": formulario})
+     
 ### delete bands 
 def delete_band (request):
     pass 
