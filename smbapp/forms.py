@@ -8,13 +8,12 @@ from smbapp.models import *
 
 #Form Creat User
 class FormCreateUser (UserCreationForm):
-    email = forms.EmailField()
     password1 = forms.CharField (label='Password', widget=forms.PasswordInput)
     password1 = forms.CharField (label='Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ['email','username' , 'password1', 'password2']
+        fields = ['first_name','last_name','username', 'email','password1', 'password2']
         help_texts = {k:'' for k in fields}
 
 #Form to create band
