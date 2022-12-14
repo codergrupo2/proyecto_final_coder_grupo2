@@ -11,8 +11,10 @@ from django.contrib.auth import login as authlogin
 #Import Vistas basadas en Clases
 from proyecto_final_grupo2.settings import BASE_DIR
 import os
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic.edit import CreateView
+from django.core.paginator import Paginator
+
 
 #Decorators
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,12 +26,13 @@ from django.contrib.auth.decorators import login_required
 from smbapp.models import *
 from smbapp.forms import *
 
-# Create your views here.
-def smbapp_home (request):
-
+# Create your views here w
+def smbapp_home (request,page):
     posts = Post.objects.all()
+    paginator = Paginator (posts, per_page = 2)
+    page_post = paginator.get_page (page)
+    return render (request, 'smbapp/index.html', {'page_post': page_post})
 
-    return render (request, 'smbapp/index.html', {'posts': posts})
 
 # Create your views here.
 def smbapp_profile (request):
@@ -72,7 +75,8 @@ def login (request):
              user = authenticate(username=data["username"], password=data["password"])             
              if user is not None:
                 authlogin(request,user)
-                return redirect ("smbapp-home")
+                 #add one to return first page
+                return redirect ("/smbapp/home/1")
              else:
                 return render (request, 'smbapp/login.html', {"form": form, "errors": "Credenciales invalidas"})
         else:
@@ -96,8 +100,8 @@ def add_my_instruments (request):
             for instrument in list_instruments:
                 my_instruments.instruments.add(instrument)           
             my_instruments.save()
-
-            return redirect("smbapp-home")
+            #add one to return first page
+            return redirect("smbapp-home"+"1")
         else:
             return render(request, "smbapp/add_my_instruments.html", {"form": formulario, "errors": formulario.errors })
     formulario = FormAddMyInstruments()
@@ -130,8 +134,8 @@ def create_band (request):
             for member in list_members:
                 band.members.add(member)           
             band.save()
-
-            return redirect("smbapp-home")
+            #add one to return first page
+            return redirect("smbapp-home"+"1")
         else:
             return render(request, "smbapp/band_form.html", {"form": formulario, "errors": formulario.errors })
     formulario = FormCreateBand()
@@ -184,7 +188,7 @@ class CreatePost (CreateView):
     model = Post
     form_class = FormCreatePost
     template_name = "smbapp/post_form.html"
-    success_url = '/smbapp/home/'
+    success_url = '/smbapp/home/1'
 
     def get_form_kwargs(self):
         kwargs = super(CreatePost, self).get_form_kwargs()

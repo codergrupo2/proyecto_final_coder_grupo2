@@ -4,11 +4,12 @@ from smbapp.views import *
 
 
 urlpatterns = [
-   path ( 'home/', smbapp_home , name = 'smbapp-home'),
+   path ( 'home/<int:page>', smbapp_home , name = 'smbapp-home'),
    path ( 'profile/', smbapp_profile , name = 'smbapp-profile'),
    path ( 'register/', register, name = 'smbapp-register' ),
    path ( 'login/', login, name = 'smbapp-login' ),
-   path ( 'logout/', LogoutView.as_view(next_page='smbapp-home'), name = 'smbapp-logout'),
+   #add one to home page to return first page
+   path ( 'logout/', LogoutView.as_view(next_page='/smbapp/home/1'), name = 'smbapp-logout'),
    path ( 'instrument/create/', CreateInstrument.as_view() , name = 'create-instrument'),
    #CRUD BAND
    ## Search
