@@ -12,9 +12,14 @@ from django.shortcuts import redirect, render
 #Modelo de musico
 class Musician (models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(User)
     avatar = models.ImageField()
+    bio_link = models.URLField(max_length=200)
     def __str__(self):
         return self.user_id
+    
+    def get (self):
+        return self.name, self.email
 
 #modelo de banda
 class Band (models.Model):
@@ -24,6 +29,8 @@ class Band (models.Model):
     creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='creator')
     def __str__(self) :
         return f"{self.name}"
+
+
 
 #modelo de post
 class Post (models.Model):

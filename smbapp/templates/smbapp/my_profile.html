@@ -5,12 +5,23 @@
 {% block contenido %}
                        
 {% if request.user.is_authenticated %}
-    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
-    <br>
+    {% if errors %}
+        <p style="color: red">Error: {{errors}}</p>
+    {% endif %}
     <center>
-    <a class="btn btn-primary" href="{% url 'crud-bands' %}">Band Actions</a>
-    <a class="btn btn-primary" href="{% url 'create-post' %}">Create Post</a>
-   </center>
+        {% for profile in profiles %}
+            <h3>User # {{profile.username}}</h3>
+                        <div class="card my-4">
+                                <div class="card-body">
+                                    <h6 class="card-title">E-Mail : {{ profile.email }}</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">Name: {{ profile.first_name }} </h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">Lastname: {{ profile.last_name }} </h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">Bio: {{ profile.bio_link }} </h6>
+                                </div>
+                            <a class="btn btn-primary" href="">Edit Profile</a>
+                        </div>
+        {% endfor %}
+    </center>
 {% else %}
     <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
 {% endif %}

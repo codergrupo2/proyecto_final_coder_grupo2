@@ -5,9 +5,11 @@ from smbapp.views import *
 
 urlpatterns = [
    path ( 'home/<int:page>', smbapp_home , name = 'smbapp-home'),
-   path ( 'profile/', smbapp_profile , name = 'smbapp-profile'),
+   path ( 'actions/', smbapp_actions , name = 'smbapp-actions'),
+   ####CRUD Users
    path ( 'register/', register, name = 'smbapp-register' ),
    path ( 'login/', login, name = 'smbapp-login' ),
+   path ( 'profile/', smbapp_profile, name = 'smbapp-profile'),
    #add one to home page to return first page
    path ( 'logout/', LogoutView.as_view(next_page='/smbapp/home/1'), name = 'smbapp-logout'),
    #CRUD BAND
