@@ -3,24 +3,39 @@
 {% load static %}
 
 {% block contenido %}
-                       
-    {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated %}
     <p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p>
     {% else %}
         <p class="small text-muted mb-4 mb-lg-0">Hola Visitante</p>
     {% endif %}
 
     <center>
-    {% for post in posts %}
+    {% for post in page_post %}
         <h3>Post # {{post.id}}</h3>
-                    <div class="card my-4">
-                            <div class="card-body">
-                            <h5 class="card-title">Banda : {{ post.band }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Tour Date : {{ post.tour_dates }}</h6>
-                            <h7 class="card-text">Description: {{ post.text }}</h7> 
-                        </div>
-                    </div>
+        <div class="card my-4">
+            <div class="card-body">
+            <h5 class="card-title">Banda : {{ post.band }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Tour Date : {{ post.tour_dates }}</h6>
+            <h6 class="card-text">Description: {{ post.text }}</h7> 
+        </div>
+    </div>
+
     {% endfor %}
     </center>
-
+    {% block pagination %}
+    <center>
+    {% if page_post.has_previous %}
+         <a class="btn btn-primary" href="{% url 'smbapp-home' page_post.previous_page_number %}">
+             Previous Page
+         </a>
+     {% endif%}
+     {% if page_post.has_next %}
+         <a class="btn btn-primary" href="{% url 'smbapp-home' page_post.next_page_number %}">
+             Next Page
+         </a>
+     {% endif%}
+    </center>
+    {% endblock %}
 {% endblock %}
+
+
