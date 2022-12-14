@@ -1,16 +1,10 @@
 from django import forms 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.admin.widgets import AdminDateWidget
+
 from smbapp.models import *
 
 
-
-#Form to create instrument
-class FormCreatInstrument (forms.ModelForm):
-    name = forms.CharField(max_length=50,required=False,widget=forms.TextInput(attrs={'class':'form-control'}))
-
-    class Meta:
-        model = Instrument
-        fields = ['name']
 
 #Form Creat User
 class FormCreateUser (UserCreationForm):
@@ -33,20 +27,18 @@ class FormCreateBand(forms.Form):
         model = Band
         fields = ['name', 'description', 'members']
 
-#Form create musician - add my instruments
-class FormAddMyInstruments(forms.Form):
-    instrument = forms.ModelMultipleChoiceField(queryset=Instrument.objects.all().order_by('name'),widget=forms.CheckboxSelectMultiple)
-
 
 #Form create post
 class FormCreatePost(forms.ModelForm):
-    band = forms.ModelChoiceField(queryset=Band.objects.all().order_by('name'))
-    tour_dates = forms.DateField
-    text = forms.CharField()
+    # band = forms.ModelChoiceField(queryset=Band.objects.all().order_by('name'))
+    # tour_name = models.CharField (max_length=100)
+    # tour_dates = forms.DateField (widget=AdminDateWidget)
+    # text = forms.CharField(max_length=250)
+    # image = forms.ImageField()
     
     class Meta:
         model = Post
-        fields =['band', 'tour_dates', 'text']
+        fields =['band', 'tour_name', 'tour_dates', 'text', 'image']
     
     def __init__(self, *args, **kwargs):
        user = kwargs.pop('user')

@@ -10,7 +10,6 @@ urlpatterns = [
    path ( 'login/', login, name = 'smbapp-login' ),
    #add one to home page to return first page
    path ( 'logout/', LogoutView.as_view(next_page='/smbapp/home/1'), name = 'smbapp-logout'),
-   path ( 'instrument/create/', CreateInstrument.as_view() , name = 'create-instrument'),
    #CRUD BAND
    ## Search
    path ( 'band/crud-bands/', crud_bands, name='crud-bands'),
@@ -19,6 +18,5 @@ urlpatterns = [
    path ( 'band/delete/', delete_band, name='delete-band'),
    #####
 
-   path ( 'musician/add-instruments/', add_my_instruments, name='add-my-instruments'),
    path ( 'user/create/post', CreatePost.as_view(), name='create-post')
 ]
