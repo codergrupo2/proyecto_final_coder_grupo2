@@ -14,7 +14,7 @@ class Musician (models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField(User)
     avatar = models.ImageField()
-    bio_link = models.URLField()
+    bio_link = models.URLField(max_length=200)
     def __str__(self):
         return self.user_id
     
