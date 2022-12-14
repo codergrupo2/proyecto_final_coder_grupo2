@@ -8,18 +8,13 @@ from django.shortcuts import redirect, render
 
 # Create your models here
 
-#Modelo de intrumento
-class Instrument (models.Model):
-    name =  CaseInsensitiveCharField(max_length=100, unique=True, blank=False)
-    def __str__(self):
-        return self.name
 
 #Modelo de musico
-class MyInstruments (models.Model):
+class Musician (models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    instruments = models.ManyToManyField (Instrument)
+    avatar = models.ImageField()
     def __str__(self):
-        return self.instruments
+        return self.user_id
 
 #modelo de banda
 class Band (models.Model):
@@ -33,7 +28,10 @@ class Band (models.Model):
 #modelo de post
 class Post (models.Model):
     band = models.ForeignKey (Band, on_delete=models.CASCADE)
+    tour_name = models.CharField (max_length=100)
     tour_dates = models.DateField()
     text = models.CharField(max_length=140)
+    creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='post_creator')
+    image = models.ImageField(upload_to = "media/")
 
     

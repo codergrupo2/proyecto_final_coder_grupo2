@@ -10,15 +10,10 @@ from django.contrib.auth import login as authlogin
 
 #Import Vistas basadas en Clases
 from proyecto_final_grupo2.settings import BASE_DIR
-import os
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
 
-
-#Decorators
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 
 
 
@@ -84,30 +79,6 @@ def login (request):
     form = AuthenticationForm()
     return render (request, 'smbapp/login.html', {"form": form, "errors": errors})
 
-# agrego mis instrumentos
-def add_my_instruments (request):
-    
-    if request.method == "POST":
-        formulario = FormAddMyInstruments(request.POST)
-
-        if formulario.is_valid():
-            data = formulario.cleaned_data
-            user_id = request.user
-            my_instruments = MyInstruments(user_id = user_id)
-            my_instruments.save()
-
-            list_instruments = data['instrument']
-            for instrument in list_instruments:
-                my_instruments.instruments.add(instrument)           
-            my_instruments.save()
-            #add one to return first page
-            return redirect("smbapp-home"+"1")
-        else:
-            return render(request, "smbapp/add_my_instruments.html", {"form": formulario, "errors": formulario.errors })
-    formulario = FormAddMyInstruments()
-
-    return render(request, "smbapp/add_my_instruments.html", {"form": formulario})
-
 
 ########### CRUD Bands ###############
 ## home crud bands
@@ -135,7 +106,7 @@ def create_band (request):
                 band.members.add(member)           
             band.save()
             #add one to return first page
-            return redirect("smbapp-home"+"1")
+            return redirect("/smbapp/home/1")
         else:
             return render(request, "smbapp/band_form.html", {"form": formulario, "errors": formulario.errors })
     formulario = FormCreateBand()
@@ -177,12 +148,6 @@ def delete_band (request):
 ############END CRUD BANDS ######################
 
 #### Views As a CLASS
-class CreateInstrument(CreateView):
-     model = Instrument
-     form_class = FormCreatInstrument
-     template_name = "smbapp/instrument_form.html"
-     success_url = '/smbapp/home/'
-
 
 class CreatePost (CreateView):
     model = Post
@@ -194,5 +159,4 @@ class CreatePost (CreateView):
         kwargs = super(CreatePost, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
-
-#### CRUD Instrument
+    
