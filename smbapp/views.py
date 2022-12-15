@@ -14,12 +14,13 @@ from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
 
-
-
+#decorator
+from django.contrib.auth.decorators import login_required
 
 #import my models and forms
 from smbapp.models import *
 from smbapp.forms import *
+
 
 # Create your views here w
 def smbapp_home (request,page):
@@ -33,27 +34,31 @@ def smbapp_home (request,page):
 def smbapp_actions (request):
     return render (request, 'smbapp/my_actions.html')
 
+############ CRUD USER
 #view to creat user
 def register (request):
-    
     if request.method == 'POST':
 
         form = FormCreateUser (request.POST)
         
         if form.is_valid():
-            username = form.cleaned_data['username']
             form.save()
             return render (request,'smbapp/index.html', {'mensaje':' User Created'})
     else:
         form = FormCreateUser()
 
     return render (request,'smbapp/register.html', {'form':form})
+
   
 # Create your views here.
 def smbapp_profile (request):
-    profiles =  User.objects.filter(username=request.user).values('first_name', 'last_name','email','username')
-    print (profiles)
-    return render (request, 'smbapp/my_profile.html', {'profiles': profiles})
+    users=  User.objects.filter (username=request.user).values().all
+     #I do it for obtain ID
+    user_id = User.objects.get (username=request.user).pk
+    # Get avatar and Bio
+    users_extras = Musician.objects.get(user_id = user_id )
+
+    return render (request, 'smbapp/my_profile.html', {'users': users, 'users_extras': users_extras})
 
         
 #view to login
@@ -69,7 +74,7 @@ def login (request):
              user = authenticate(username=data["username"], password=data["password"])             
              if user is not None:
                 authlogin(request,user)
-                 #add one to return first page
+                #add one to return first page
                 return redirect ("/smbapp/home/1")
              else:
                 return render (request, 'smbapp/login.html', {"form": form, "errors": "Credenciales invalidas"})
@@ -77,6 +82,79 @@ def login (request):
             return render (request, 'smbapp/login.html', {"form": form, "errors": form.errors})
     form = AuthenticationForm()
     return render (request, 'smbapp/login.html', {"form": form, "errors": errors})
+
+
+def smbapp_edit (request):
+    user = request.user
+
+    if request.method == 'POST':
+
+            user_form = FormEditUser(request.POST)
+
+            if user_form.is_valid():
+                data = user_form.cleaned_data
+                user.first_name = data['first_name']
+                user.last_name = data['last_name']
+                user.email = data['email']
+                user.save()
+                return redirect('smbapp-profile')
+    else:
+        user_form = FormEditUser(initial ={'first_name':user.first_name, 'last_name':user.last_name, 'email':user.email, 'username':user.username})
+
+    return render(request, 'smbapp/edit_my_profile.html', {'user_form': user_form})
+
+#Add bio and avatar
+def smbapp_add_musician (request):
+ 
+    form = FormEditMusician()
+
+    if request.method == "POST":
+
+        form = FormEditMusician(request.POST, files=request.FILES)
+        
+        if form.is_valid():
+
+            data = form.cleaned_data
+            user = request.user
+
+            user = Musician (user=user, bio_link =data["bio_link"], image=data["image"])
+
+            user.save()
+            return redirect("smbapp-profile")
+    else:
+         return render(request, "smbapp/add_my_musician.html", {"form": form})
+
+    form = FormEditMusician()
+    return render(request, "smbapp/add_my_musician.html", {"form": form})
+
+#Add bio and avatar
+def smbapp_edit_musician (request):
+ 
+    #I do it for obtain ID
+    user_id = User.objects.get (username=request.user).pk
+    # Get avatar and Bio
+    users_extras = Musician.objects.get(user_id = user_id )
+
+    if request.method == 'POST':
+
+            user_form = FormEditMusician(request.POST)
+
+            if user_form.is_valid():
+                data = user_form.cleaned_data
+                users_extras.bio_link = data['bio_link']
+                users_extras.image = data['image']
+                users_extras.save()
+                return redirect('smbapp-profile')
+    else:
+        if users_extras.bio_link is None or users_extras.image is None:
+           users_form = FormEditMusician ()
+           return render(request, 'smbapp/edit_my_musician.html', {'users_form': users_form})
+        else:
+            users_form = FormEditMusician (initial ={ 'bio_link': users_extras.bio_link , 'image' : users_extras.image })
+            return render(request, 'smbapp/edit_my_musician.html', {'users_form': users_form})
+
+
+############ END CRUD USER
 
 
 ########### CRUD Bands ###############
@@ -108,8 +186,8 @@ def create_band (request):
             return redirect("/smbapp/home/1")
         else:
             return render(request, "smbapp/band_form.html", {"form": formulario, "errors": formulario.errors })
+    
     formulario = FormCreateBand()
-
     return render(request, "smbapp/band_form.html", {"form": formulario})
 
 ### edit band
@@ -130,7 +208,6 @@ def edit_band (request, id):
             list_members = data['members']
             for member in list_members:
                 band.members.add(member)    
-                print (band.members)       
             band.save()
             return redirect("crud-bands")
         
