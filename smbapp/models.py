@@ -3,7 +3,8 @@ from django.conf import  settings
 from django.contrib.auth.models import User
 from smbapp.fields import CaseInsensitiveCharField
 from django.shortcuts import redirect, render
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Create your models here
@@ -11,15 +12,16 @@ from django.shortcuts import redirect, render
 
 #Modelo de musico
 class Musician (models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField(User)
-    avatar = models.ImageField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio_link = models.URLField(max_length=200)
+    image = models.ImageField(upload_to="avatars", null=True, blank=True)
+    
     def __str__(self):
         return self.user_id
     
     def get (self):
         return self.name, self.email
+
 
 #modelo de banda
 class Band (models.Model):

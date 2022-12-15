@@ -10,6 +10,8 @@ urlpatterns = [
    path ( 'register/', register, name = 'smbapp-register' ),
    path ( 'login/', login, name = 'smbapp-login' ),
    path ( 'profile/', smbapp_profile, name = 'smbapp-profile'),
+   path ( 'profile/edit/', smbapp_edit, name = 'smbapp-profile-edit'),
+   path ( 'profile/add/musician', smbapp_agregar_musician, name = 'smbapp-profile-add-musician'),
    #add one to home page to return first page
    path ( 'logout/', LogoutView.as_view(next_page='/smbapp/home/1'), name = 'smbapp-logout'),
    #CRUD BAND

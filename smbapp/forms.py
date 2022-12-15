@@ -8,13 +8,37 @@ from smbapp.models import *
 
 #Form Creat User
 class FormCreateUser (UserCreationForm):
-    password1 = forms.CharField (label='Password', widget=forms.PasswordInput)
-    password1 = forms.CharField (label='Password', widget=forms.PasswordInput)
-
+    first_name = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    last_name = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    email = forms.EmailField(max_length=50,widget=forms.EmailInput(attrs={'class':'form-control'}))
+    username = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    password1 = forms.CharField (label='Password', widget=forms.PasswordInput(attrs={'class':'form-control'}))
+    password2 = forms.CharField (label='Confirm Password', widget=forms.PasswordInput(attrs={'class':'form-control'}))
+    
     class Meta:
         model = User
-        fields = ['first_name','last_name','username', 'email','password1', 'password2']
-        help_texts = {k:'' for k in fields}
+        fields = ['first_name','last_name','email','username' , 'password1', 'password2']
+
+#Edit Form
+class FormEditUser (UserCreationForm):
+    first_name = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    last_name = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    email = forms.EmailField(max_length=50,widget=forms.EmailInput(attrs={'class':'form-control'}))
+    password1 = forms.CharField (label='Password', widget=forms.PasswordInput(attrs={'class':'form-control'}),required=False )
+    password2 = forms.CharField (label='Confirm Password', widget=forms.PasswordInput(attrs={'class':'form-control'}),required=False)
+    
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email' ]
+
+
+#Edit musician
+class FormEditMusician (forms.Form):
+    bio_link = forms.URLField (max_length=100, widget=forms.URLInput(attrs={'class':'form-control'}),required=False)
+    image = forms.ImageField(required=False)
+
+
+
 
 #Form to create band
 class FormCreateBand(forms.Form):
@@ -29,11 +53,11 @@ class FormCreateBand(forms.Form):
 
 #Form create post
 class FormCreatePost(forms.ModelForm):
-    # band = forms.ModelChoiceField(queryset=Band.objects.all().order_by('name'))
-    # tour_name = models.CharField (max_length=100)
-    # tour_dates = forms.DateField (widget=AdminDateWidget)
-    # text = forms.CharField(max_length=250)
-    # image = forms.ImageField()
+    band = forms.ModelChoiceField(queryset=Band.objects.all().order_by('name'))
+    tour_name = models.CharField (max_length=100)
+    tour_dates = forms.DateField (widget=AdminDateWidget)
+    text = forms.CharField(max_length=250)
+    image = forms.ImageField()
     
     class Meta:
         model = Post
