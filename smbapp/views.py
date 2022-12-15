@@ -53,11 +53,11 @@ def register (request):
 # Create your views here.
 def smbapp_profile (request):
     users=  User.objects.filter (username=request.user).values().all
-    #I do it for obtain ID
-    user_id = User.objects.get (username=request.user)
+     #I do it for obtain ID
+    user_id = User.objects.get (username=request.user).pk
     # Get avatar and Bio
-    users_extras = Musician.objects.filter (id=user_id.id).values().all
-    print (users_extras)
+    users_extras = Musician.objects.get(user_id = user_id )
+
     return render (request, 'smbapp/my_profile.html', {'users': users, 'users_extras': users_extras})
 
         
@@ -103,8 +103,8 @@ def smbapp_edit (request):
 
     return render(request, 'smbapp/edit_my_profile.html', {'user_form': user_form})
 
-#edit bio and avatar
-def smbapp_agregar_musician (request):
+#Add bio and avatar
+def smbapp_add_musician (request):
  
     form = FormEditMusician()
 
@@ -116,8 +116,8 @@ def smbapp_agregar_musician (request):
 
             data = form.cleaned_data
             user = request.user
-            user.bio_link = data['bio_link']
-            form = Musician (user=user, bio_link =data["bio_link"], image=data["image"])
+
+            user = Musician (user=user, bio_link =data["bio_link"], image=data["image"])
 
             user.save()
             return redirect("smbapp-profile")
@@ -126,6 +126,32 @@ def smbapp_agregar_musician (request):
 
     form = FormEditMusician()
     return render(request, "smbapp/add_my_musician.html", {"form": form})
+
+#Add bio and avatar
+def smbapp_edit_musician (request):
+ 
+    #I do it for obtain ID
+    user_id = User.objects.get (username=request.user).pk
+    # Get avatar and Bio
+    users_extras = Musician.objects.get(user_id = user_id )
+
+    if request.method == 'POST':
+
+            user_form = FormEditMusician(request.POST)
+
+            if user_form.is_valid():
+                data = user_form.cleaned_data
+                users_extras.bio_link = data['bio_link']
+                users_extras.image = data['image']
+                users_extras.save()
+                return redirect('smbapp-profile')
+    else:
+        if users_extras.bio_link is None or users_extras.image is None:
+           users_form = FormEditMusician ()
+           return render(request, 'smbapp/edit_my_musician.html', {'users_form': users_form})
+        else:
+            users_form = FormEditMusician (initial ={ 'bio_link': users_extras.bio_link , 'image' : users_extras.image })
+            return render(request, 'smbapp/edit_my_musician.html', {'users_form': users_form})
 
 
 ############ END CRUD USER

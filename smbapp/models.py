@@ -14,7 +14,7 @@ from django.dispatch import receiver
 class Musician (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio_link = models.URLField(max_length=200)
-    image = models.ImageField(upload_to="avatars", null=True, blank=True)
+    image = models.ImageField(upload_to="media", null=True, blank=True)
     
     def __str__(self):
         return self.user_id
