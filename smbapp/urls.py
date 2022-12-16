@@ -23,5 +23,6 @@ urlpatterns = [
    path ( 'band/delete/', delete_band, name='delete-band'),
    #####
 
-   path ( 'user/create/post', CreatePost.as_view(), name='create-post')
+   path ( 'user/create/post', CreatePost.as_view(), name='create-post'),
+   path('about/', about_us_view, name='about-us')
 ]

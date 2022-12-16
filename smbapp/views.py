@@ -236,3 +236,7 @@ class CreatePost (CreateView):
         kwargs['user'] = self.request.user
         return kwargs
     
+
+#### About us 
+def about_us_view(request):
+    return render(request,'smbapp/about_us.html')
