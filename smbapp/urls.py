@@ -23,12 +23,16 @@ urlpatterns = [
    path ( 'band/crud-bands/', crud_bands, name='crud-bands'),
    path ( 'band/create/', create_band, name='create-band'),
    path ( 'band/edit/<id>/', edit_band, name='edit-band'),
+   path ( 'band/delete/', delete_band, name='delete-band'),
+   path ( 'user/create/post', smbapp_add_post, name='create-post'),
+   path ( 'user/create/post', CreatePost.as_view(), name='create-post'),
    path ( 'band/delete/<id>/', delete_band, name='delete-band'),
    ##### CRUD Post
    path ( 'post/crud-posts/', crud_post, name='crud-posts'),
    path ( 'post/create/', smbapp_add_post, name='create-post'),
    path ( 'post/edit/<id>/', smbapp_edit_post, name='edit-post'),
    path ( 'post/delete/<id>/', smbapp_delete_post, name='delete-post'),
+   path('about/', about_us_view, name='about-us'),
 ]
-
 urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

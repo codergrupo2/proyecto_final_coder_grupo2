@@ -233,12 +233,13 @@ def delete_band (request,id):
 
 ############END CRUD BANDS ######################
 
+
 ############# CRUD POST
 @login_required
 def crud_post (request):
     posts =  Post.objects.filter(creator=request.user)
     return render(request, "smbapp/crud_my_post.html", {'posts': posts})
-
+    
 @login_required
 def smbapp_add_post (request):
  
@@ -294,3 +295,7 @@ def smbapp_delete_post (request,id):
     post = Post.objects.get(id=id)
     post.delete()
     return redirect("crud-post")
+   
+#### About us 
+def about_us_view(request):
+    return render(request,'smbapp/about_us.html')
