@@ -148,7 +148,8 @@ def smbapp_edit_musician (request):
             if user_form.is_valid():
                 data = user_form.cleaned_data
                 users_extras.bio_link = data['bio_link']
-                users_extras.image = data['image']
+                if data['image'] is not None:
+                    users_extras.image = data['image']
                 users_extras.save()
                 return redirect('smbapp-profile')
     else:
@@ -233,12 +234,13 @@ def delete_band (request,id):
 
 ############END CRUD BANDS ######################
 
+
 ############# CRUD POST
 @login_required
 def crud_post (request):
     posts =  Post.objects.filter(creator=request.user)
     return render(request, "smbapp/crud_my_post.html", {'posts': posts})
-
+    
 @login_required
 def smbapp_add_post (request):
  
@@ -282,7 +284,7 @@ def smbapp_edit_post (request, id):
             post.tour_dates =data["tour_dates"]
             post.text = data["text"]
             post.save()
-            return redirect("crud-post")
+            return redirect("crud-posts")
         else:
             return render(request, "smbapp/edit_my_post.html", {"form": formulario, "errors": formulario.errors })
     
@@ -293,4 +295,8 @@ def smbapp_edit_post (request, id):
 def smbapp_delete_post (request,id):
     post = Post.objects.get(id=id)
     post.delete()
-    return redirect("crud-post")
+    return redirect("crud-posts")
+   
+#### About us 
+def about_us_view(request):
+    return render(request,'smbapp/about_us.html')
