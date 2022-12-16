@@ -5,7 +5,9 @@ from smbapp.views import *
 
 
 urlpatterns = [
+   
    path ( 'home/<int:page>', smbapp_home , name = 'smbapp-home'),
+   path('', lambda req: redirect('home/1')),
    path ( 'actions/', smbapp_actions , name = 'smbapp-actions'),
    ####CRUD Users
    path ( 'register/', register, name = 'smbapp-register' ),
