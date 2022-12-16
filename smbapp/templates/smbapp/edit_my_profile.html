@@ -12,7 +12,8 @@
         <form method="post">
             {% csrf_token %}
             {{ user_form.as_p }}
-            <input type="submit" value="Update">
+            <input a class="btn btn-primary" type="submit" value="Update">
+            <a class="btn btn-primary" href="{% url 'smbapp-profile' %}">Back</a>
         </form>
 {% endif %}
 

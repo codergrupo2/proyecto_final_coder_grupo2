@@ -9,11 +9,10 @@
             <p style="color: red"> {{errors}} </p>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             {% csrf_token %}
-            {{ users_form.as_p }}
-            <input a class="btn btn-primary" type="submit" value="Update">
-            <a class="btn btn-primary" href="{% url 'smbapp-profile' %}">Back</a>
+            {{ form.as_p }}
+            <input type="submit" value="Update">
         </form>
 {% endif %}
 

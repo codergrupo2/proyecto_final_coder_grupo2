@@ -8,7 +8,6 @@
     <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
     <center>
         {% for band in my_bands %}
-            <h3>Band ID# {{band.id}}</h3>
                         <div class="card my-4">
                                 <div class="card-body">
                                 <h5 class="card-title">Banda : {{ band.name }}</h5>
@@ -19,8 +18,8 @@
                                         {{member}}
                                     </li>
                                 {% endfor %}
-                            </div>
-                            <a class="btn btn-primary" href="{% url 'edit-band' band.id %}">Edit Band</a>
+                                <a class="btn btn-primary" href="{% url 'edit-band' band.id %}">Edit Band</a>
+                                <a class="btn btn-primary" href="{% url 'delete-band' band.id %}">Delete Band</a>
                         </div>
         {% endfor %}
         </center>
