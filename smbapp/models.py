@@ -14,13 +14,7 @@ from django.dispatch import receiver
 class Musician (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio_link = models.URLField(max_length=200)
-    image = models.ImageField(upload_to="media", null=True, blank=True)
-    
-    def __str__(self):
-        return self.user_id
-    
-    def get (self):
-        return self.name, self.email
+    image = models.ImageField(upload_to="avatares", null=True, blank=True)
 
 
 #modelo de banda
@@ -33,7 +27,6 @@ class Band (models.Model):
         return f"{self.name}"
 
 
-
 #modelo de post
 class Post (models.Model):
     band = models.ForeignKey (Band, on_delete=models.CASCADE)
@@ -41,6 +34,6 @@ class Post (models.Model):
     tour_dates = models.DateField()
     text = models.CharField(max_length=140)
     creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='post_creator')
-    image = models.ImageField(upload_to = "media/")
+    image = models.ImageField(upload_to = "posts",null=True, blank=True)
 
     
