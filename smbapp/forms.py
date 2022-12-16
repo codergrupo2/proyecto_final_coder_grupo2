@@ -62,8 +62,3 @@ class FormCreatePost(forms.ModelForm):
     class Meta:
         model = Post
         fields =['band', 'tour_name', 'tour_dates', 'text', 'image']
-    
-    def __init__(self, *args, **kwargs):
-       user = kwargs.pop('user')
-       super(FormCreatePost, self).__init__(*args, **kwargs)
-       self.fields['band'].queryset = Band.objects.filter(creator=user)
