@@ -1,0 +1,33 @@
+{% extends 'smbapp/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+                       
+{% if request.user.is_authenticated %}
+    <center><p class="small text-muted mb-4 mb-lg-0">Hola :: {{request.user.username}}!</p></center>
+    <center>
+        {% for post in posts %}
+                        <div class="card my-4">
+                                <div class="card-body">
+                                <img src="{{ post.image.url}}" style="max-width: 100px;">
+                                <h5 class="card-title">Banda : {{ post.band }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Tour Name : {{ post.tour_name }}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">Tour Dat : {{ post.tour_dates }}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">Description : {{ post.text }}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">Creator : {{ post.creator }}</h6>
+                                <a class="btn btn-primary" href="{% url 'edit-post' post.id %}">Edit Post</a>
+                                <a class="btn btn-primary" href="{% url 'delete-post' post.id %}">Delete Post</a>
+                        </div>
+        {% endfor %}
+        </center>
+    <center>
+    <a class="btn btn-primary" href="{% url 'create-post' %}">Create Post</a>
+
+   </center>
+{% endif %}
+
+
+{% endblock %}
+
+

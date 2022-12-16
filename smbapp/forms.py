@@ -62,3 +62,13 @@ class FormCreatePost(forms.ModelForm):
     class Meta:
         model = Post
         fields =['band', 'tour_name', 'tour_dates', 'text', 'image']
+
+#Form Edit post
+class FormEditPost(forms.ModelForm):
+    tour_name = models.CharField (max_length=100)
+    tour_dates = forms.DateField (widget=AdminDateWidget)
+    text = forms.CharField(max_length=250)
+        
+    class Meta:
+        model = Post
+        fields =[ 'tour_name', 'tour_dates', 'text']

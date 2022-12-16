@@ -31,6 +31,7 @@ def smbapp_home (request,page):
 
 
 # Create your views here.
+@login_required
 def smbapp_actions (request):
     return render (request, 'smbapp/my_actions.html')
 
@@ -51,6 +52,7 @@ def register (request):
 
   
 # Create your views here.
+@login_required
 def smbapp_profile (request):
     #I do it for obtain ID
     users=  User.objects.filter (username=request.user).values().all
@@ -62,8 +64,6 @@ def smbapp_profile (request):
     except:
         # Get avatar and Bio
         return render (request, 'smbapp/my_profile.html', {'users': users})
-
-
 
         
 #view to login
@@ -88,7 +88,7 @@ def login (request):
     form = AuthenticationForm()
     return render (request, 'smbapp/login.html', {"form": form, "errors": errors})
 
-
+@login_required
 def smbapp_edit_profile (request):
     user = request.user
 
@@ -109,6 +109,7 @@ def smbapp_edit_profile (request):
     return render(request, 'smbapp/edit_my_profile.html', {'user_form': user_form})
 
 #Add bio and avatar
+@login_required
 def smbapp_add_musician (request):
  
     form = FormEditMusician()
@@ -130,7 +131,9 @@ def smbapp_add_musician (request):
     form = FormEditMusician()
     return render(request, "smbapp/add_my_musician.html", {"form": form})
 
+
 #Add bio and avatar
+@login_required
 def smbapp_edit_musician (request):
  
     #I do it for obtain ID
@@ -158,11 +161,13 @@ def smbapp_edit_musician (request):
 
 ########### CRUD Bands ###############
 ## home crud bands
+@login_required
 def crud_bands (request):
     my_bands =  Band.objects.filter(creator=request.user)
     return render(request, "smbapp/crud_my_bands.html", {'my_bands': my_bands})
 
 # Crear Banda
+@login_required
 def create_band (request):
     
     if request.method == "POST":
@@ -182,14 +187,15 @@ def create_band (request):
                 band.members.add(member)           
             band.save()
             #add one to return first page
-            return redirect("/smbapp/home/1")
+            return redirect("/smbapp/actions")
         else:
-            return render(request, "smbapp/band_form.html", {"form": formulario, "errors": formulario.errors })
+            return render(request, "smbapp/create_band.html", {"form": formulario, "errors": formulario.errors })
     
     formulario = FormCreateBand()
-    return render(request, "smbapp/band_form.html", {"form": formulario})
+    return render(request, "smbapp/create_band.html", {"form": formulario})
 
 ### edit band
+@login_required
 def edit_band (request, id):
     band = Band.objects.get(id=id)
     
@@ -217,26 +223,23 @@ def edit_band (request, id):
     return render(request, "smbapp/edit_my_band.html", {"form": formulario})
      
 ### delete bands 
-def delete_band (request):
-    pass 
+@login_required
+def delete_band (request,id):
+    band = Band.objects.get(id=id)
+    band.delete()
+    return redirect("crud-bands")
+
+     
 
 ############END CRUD BANDS ######################
 
-#### Views As a CLASS
+############# CRUD POST
+@login_required
+def crud_post (request):
+    posts =  Post.objects.filter(creator=request.user)
+    return render(request, "smbapp/crud_my_post.html", {'posts': posts})
 
-class CreatePost (CreateView):
-    model = Post
-    form_class = FormCreatePost
-    template_name = "smbapp/post_form.html"
-    success_url = '/smbapp/home/1'
-
-    def get_form_kwargs(self):
-        kwargs = super(CreatePost, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-    
-
-
+@login_required
 def smbapp_add_post (request):
  
     form = FormCreatePost()
@@ -261,8 +264,33 @@ def smbapp_add_post (request):
             return redirect("/smbapp/home/1")
     else:
          form = FormCreatePost()
-         return render(request, "smbapp/post_form.html", {"form": form})
+         return render(request, "smbapp/create_post.html", {"form": form})
     
-    return render(request, "smbapp/post_form.html", {"form": form})
+    return render(request, "smbapp/create_post.html", {"form": form})
 
-   
+@login_required
+def smbapp_edit_post (request, id):
+    post = Post.objects.get(id=id)
+    
+    if request.method == "POST":
+
+        formulario = FormEditPost (request.POST)
+       
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            post.tour_name =data["tour_name"]
+            post.tour_dates =data["tour_dates"]
+            post.text = data["text"]
+            post.save()
+            return redirect("crud-post")
+        else:
+            return render(request, "smbapp/edit_my_post.html", {"form": formulario, "errors": formulario.errors })
+    
+    formulario = FormEditPost(initial={ "band" : post.band, "tour_name": post.tour_name , "tour_dates": post.tour_dates, "creator": post.creator, "text": post.text })
+    return render(request, "smbapp/edit_my_post.html", {"form": formulario})
+     
+@login_required
+def smbapp_delete_post (request,id):
+    post = Post.objects.get(id=id)
+    post.delete()
+    return redirect("crud-post")
