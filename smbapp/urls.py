@@ -23,7 +23,7 @@ urlpatterns = [
    path ( 'band/edit/<id>/', edit_band, name='edit-band'),
    path ( 'band/delete/', delete_band, name='delete-band'),
    #####
-   path ( 'user/create/post', CreatePost.as_view(), name='create-post')
+   path ( 'user/create/post', smbapp_add_post, name='create-post')
 ]
 
 urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -235,3 +235,34 @@ class CreatePost (CreateView):
         kwargs['user'] = self.request.user
         return kwargs
     
+
+
+def smbapp_add_post (request):
+ 
+    form = FormCreatePost()
+
+    if request.method == "POST":
+
+        form = FormCreatePost(request.POST, request.FILES)
+        
+        if form.is_valid():
+            
+            data = form.cleaned_data
+            post = Post (
+                band =data["band"], 
+                tour_name =data["tour_name"],
+                tour_dates =data["tour_dates"],
+                creator = request.user,
+                text = data["text"],
+                image= data["image"]
+                )
+            post.save()
+
+            return redirect("/smbapp/home/1")
+    else:
+         form = FormCreatePost()
+         return render(request, "smbapp/post_form.html", {"form": form})
+    
+    return render(request, "smbapp/post_form.html", {"form": form})
+
+   
