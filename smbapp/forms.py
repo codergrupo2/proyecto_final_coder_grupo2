@@ -34,7 +34,7 @@ class FormEditUser (UserCreationForm):
 
 #Edit musician
 class FormEditMusician (forms.Form):
-    bio_link = forms.URLField (max_length=100, widget=forms.URLInput(attrs={'class':'form-control'}),required=False)
+    bio_link = forms.URLField (max_length=100, widget=forms.URLInput(attrs={'class':'form-control'}))
     image = forms.ImageField(required=False)
 
 
@@ -68,7 +68,7 @@ class FormEditPost(forms.ModelForm):
     tour_name = models.CharField (max_length=100)
     tour_dates = forms.DateField (widget=AdminDateWidget)
     text = forms.CharField(max_length=250)
-        
+
     class Meta:
         model = Post
         fields =[ 'tour_name', 'tour_dates', 'text']
