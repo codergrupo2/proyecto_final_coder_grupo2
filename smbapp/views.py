@@ -1,6 +1,7 @@
-
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 
 #Import Auth Class
 from django.contrib.auth.forms import AuthenticationForm
@@ -13,13 +14,14 @@ from proyecto_final_grupo2.settings import BASE_DIR
 from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
-
+from django.views import View
 #decorator
 from django.contrib.auth.decorators import login_required
 
 #import my models and forms
 from smbapp.models import *
 from smbapp.forms import *
+from django.db.models import Q
 
 
 # Create your views here w
@@ -300,3 +302,82 @@ def smbapp_delete_post (request,id):
 #### About us 
 def about_us_view(request):
     return render(request,'smbapp/about_us.html')
+
+##### MESSAGING APP #####
+
+#Thread List
+class ListThreads(View):
+    def get(self, request, *args, **kwargs):
+        threads = ThreadModel.objects.filter(Q(user=request.user ) | Q(receiver=request.user) )
+
+        context = { 'threads': threads}
+
+        return render(request, 'smbapp/inbox.html', context)
+
+class CreateThread(View):
+    def get(self, request, *args, **kwargs):
+        form = ThreadForm()
+        
+        context = {'form': form}
+
+        return render (request, 'smbapp/create_thread.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = ThreadForm(request.POST)
+
+        username = request.POST.get('username')
+
+        try:
+            receiver = User.objects.get(username=username)
+            if ThreadModel.objects.filter(user=request.user, receiver=receiver).exists():
+                
+                thread = ThreadModel.objects.filters(user=request.user, receiver=receiver)[0]
+                
+                return redirect('thread', pk=thread.pk)
+            
+            elif ThreadModel.objects.filter(user=receiver, receiver=request.user).exists():
+               
+                thread = ThreadModel.objects.filter(user=receiver, receiver=request.user)[0]
+
+                return redirect ('thread', pl=thread.pk)
+            
+            if form.is_valid():
+                thread = ThreadModel(
+                    user = request.user,
+                    receiver=receiver
+                    )
+                thread.save()
+
+                return redirect('thread', pk=thread.pk)
+        except:
+            return redirect('create-thread')
+
+class ThreadView(View):
+    def get(self, request, pk, *args, **kwargs):
+        form = MessageForm()
+        thread = ThreadModel.objects.get(pk=pk)
+        message_list = MessageModel.objects.filter(thread__pk__contains=pk)
+        context ={
+            'thread': thread,
+            'form': form,
+            'message_list': message_list
+        }
+        return render( request, 'smbapp/thread.html', context)
+
+class CreateMessage(View):
+    def post(self, request, pk, *args, **kwargs):
+        thread = ThreadModel.objects.get(pk=pk)
+        if thread.receiver == request.user:
+            receiver = thread.user
+        else:
+            receiver = thread.receiver
+        message = MessageModel(
+            thread=thread,
+            sender_user=request.user,
+            receiver_user=receiver,
+            body=request.POST.get('message')
+        )
+        message.save()
+        return redirect('thread', pk=pk)
+
+##### END MESSAGING APP #####

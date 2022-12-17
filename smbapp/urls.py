@@ -32,6 +32,11 @@ urlpatterns = [
    path ( 'post/edit/<id>/', smbapp_edit_post, name='edit-post'),
    path ( 'post/delete/<id>/', smbapp_delete_post, name='delete-post'),
    path('about/', about_us_view, name='about-us'),
+   path('inbox/', ListThreads.as_view(), name='inbox'),
+   path('inbox/create-thread/', CreateThread.as_view(), name='create-thread'),
+   path('inbox/<int:pk>/', ThreadView.as_view(), name="thread"),
+   path('inbox<int:pk>/create-message/', CreateMessage.as_view(), name='create-message'),
+
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
