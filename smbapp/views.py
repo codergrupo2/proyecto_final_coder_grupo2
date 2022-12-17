@@ -312,7 +312,7 @@ class ListThreads(View):
 
         context = { 'threads': threads}
 
-        return render(request, 'smbapp/inbox.html', context)
+        return render(request, 'smbapp/messages.html', context)
 
 class CreateThread(View):
     def get(self, request, *args, **kwargs):
