@@ -5,6 +5,7 @@ from smbapp.fields import CaseInsensitiveCharField
 from django.shortcuts import redirect, render
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 # Create your models here
@@ -36,4 +37,15 @@ class Post (models.Model):
     creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='post_creator')
     image = models.ImageField(upload_to = "posts",null=True, blank=True)
 
-    
+#modelo message thread
+class ThreadModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+
+#modelo message
+class MessageModel(models.Model):
+    thread = models.ForeignKey('Threadmodel', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    body = models.CharField(max_length=1000)
+    date = models.DateTimeField(default=timezone.now)
