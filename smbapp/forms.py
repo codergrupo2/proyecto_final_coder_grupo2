@@ -72,3 +72,12 @@ class FormEditPost(forms.ModelForm):
     class Meta:
         model = Post
         fields =[ 'tour_name', 'tour_dates', 'text']
+
+#Form Thread
+class ThreadForm(forms.Form):
+    username = forms.CharField(label='', max_length=100)
+
+
+#MessageForm
+class MessageForm(forms.Form):
+    message= forms.CharField(label='', max_length=1000)
